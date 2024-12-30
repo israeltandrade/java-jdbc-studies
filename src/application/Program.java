@@ -6,6 +6,7 @@ import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 
 import db.DB;
+import db.DbIntegrityException;
 
 public class Program {
 
@@ -15,31 +16,56 @@ public class Program {
 		Connection conn = null;
 		PreparedStatement st = null;
 
+		//------DELETE DATA:
+		
+				try {
+					conn = DB.getConnection();
+					
+					st = conn.prepareStatement(
+							"DELETE FROM department "
+							+ "WHERE "
+							+ "Id = ?");
+					
+					//	First parameter refers to the "?", the second one is the value:
+					st.setInt(1, 2);
+					
+					int rowsAffected = st.executeUpdate();
+					
+					System.out.println("Done! Rows affected: " + rowsAffected);
+				}
+				catch (SQLException e) {
+					throw new DbIntegrityException(e.getMessage());
+				}
+				finally {
+					DB.closeStatement(st);
+					DB.closeConnection();
+				}		
+
 //------UPDATE DATA:
 		
-		try {
-			conn = DB.getConnection();
-			
-			st = conn.prepareStatement(
-					"UPDATE seller "
-					+ "SET BaseSalary = BaseSalary + ? "
-					+ "WHERE "
-					+ "(DepartmentId = ?)");
-//			First parameter refers to the "?", the second one is the value:
-			st.setDouble(1,  200.0);
-			st.setInt(2, 2);
-			
-			int rowsAffected = st.executeUpdate();
-			
-			System.out.println("Done! Rows affected: " + rowsAffected);
-		}
-		catch (SQLException e) {
-			e.printStackTrace();
-		}
-		finally {
-			DB.closeStatement(st);
-			DB.closeConnection();
-		}
+//		try {
+//			conn = DB.getConnection();
+//			
+//			st = conn.prepareStatement(
+//					"UPDATE seller "
+//					+ "SET BaseSalary = BaseSalary + ? "
+//					+ "WHERE "
+//					+ "(DepartmentId = ?)");
+////			First parameter refers to the "?", the second one is the value:
+//			st.setDouble(1,  200.0);
+//			st.setInt(2, 2);
+//			
+//			int rowsAffected = st.executeUpdate();
+//			
+//			System.out.println("Done! Rows affected: " + rowsAffected);
+//		}
+//		catch (SQLException e) {
+//			e.printStackTrace();
+//		}
+//		finally {
+//			DB.closeStatement(st);
+//			DB.closeConnection();
+//		}
 		
 //------INSERT DATA:
 
